@@ -3,41 +3,42 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Votación</title>
-  <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400" rel="stylesheet">
+  <title>Vota por el Mejor Disfraz 2025</title>
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,600" rel="stylesheet">
   <link rel="stylesheet" href="style/vote.css">
 </head>
 <body>
   <main class="vote">
-    <div class="vote-card">
-      <h2 data-node-name="voteHeading">Encuesta de votación</h2>
-      <p class="vote-muted" data-node-name="voteSubtext">
-        Solo correos <strong>@genteutil.net</strong> o <strong>@genteutilsa.com</strong>. Un correo = un voto. Tus respuestas no son públicas.
-      </p>
+    <header class="vote-header">
+      <h1>Vota por el <span>Mejor Disfraz 2025</span></h1>
+      <p>Solo correos <b>@genteutil.net</b> o <b>@genteutilsa.com</b>. Un correo = un voto. Tus respuestas no son públicas.</p>
+    </header>
 
+    <section class="vote-form">
       <form id="voteForm" novalidate>
-        <label for="email">Correo electrónico</label>
-        <input id="email" name="email" type="email" placeholder="tucorreo@genteutil.net" autocomplete="email" required>
+        <label for="email" class="email-label">Correo corporativo</label>
+        <div class="email-row">
+          <input id="email" name="email" type="email" placeholder="tunombre@genteutil.net" autocomplete="email" required>
+          <button id="submitBtn" type="submit" class="submit">Enviar voto</button>
+        </div>
 
-        <label for="choice">Tu elección</label>
-        <select id="choice" name="choice" required>
-          <option value="" disabled selected>Selecciona una opción</option>
-          <option data-node-name="optionA" value="Opción A">Opción A</option>
-          <option data-node-name="optionB" value="Opción B">Opción B</option>
-          <option data-node-name="optionC" value="Opción C">Opción C</option>
-        </select>
+        <p class="hint">Selecciona tu favorito (solo una opción):</p>
 
-        <button id="submitBtn" type="submit" class="submit" data-node-name="submitLabel">Enviar voto</button>
+        <!-- GRID DE TARJETAS -->
+        <div id="grid" class="grid" role="radiogroup" aria-label="Candidatos a Mejor Disfraz"></div>
+
+        <div id="msg" class="msg" role="status" aria-live="polite"></div>
+
+        <div class="vote-actions">
+          <a href="index.html" class="linkish">Volver al show</a>
+        </div>
       </form>
-
-      <div id="msg" class="msg" role="status" aria-live="polite"></div>
-
-      <div class="vote-actions">
-        <a href="index.html" class="linkish" id="backShow">Volver al show</a>
-      </div>
-    </div>
+    </section>
   </main>
 
+  <!-- Lista de candidatos (IDs, nombres e imágenes) -->
+  <script src="script/candidates.js"></script>
+  <!-- Lógica de votación y envío -->
   <script src="script/vote.js"></script>
 </body>
 </html>

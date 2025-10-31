@@ -1,97 +1,126 @@
 // ======== CONFIGURA TU ENDPOINT (Apps Script /exec) ========
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxYHsL31ckTS2Cctqc1ec82pxkv5leeuzSlaHbxnas0i-QFrpTz3hssht52cYs_2wGp/exec";
 
-// Carga mensajes/labels desde customize.json (opcional)
-fetch("customize.json")
-  .then(r => r.json())
-  .then(cfg => {
-    // Inserta textos si existen
-    const map = ["voteHeading", "voteSubtext", "optionA", "optionB", "optionC", "submitLabel"];
-    map.forEach(key => {
-      const el = document.querySelector(`[data-node-name="${key}"]`);
-      if (el && cfg[key]) el.innerText = cfg[key];
+// Validación de correo corporativo
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const allowedDomainRegex = /@(genteutil\.net|genteutilsa\.com)$/i;
+
+const grid = document.getElementById("grid");
+const form = document.getElementById("voteForm");
+const submitBtn = document.getElementById("submitBtn");
+const msg = document.getElementById("msg");
+
+// Construir tarjetas
+function renderGrid() {
+  const frag = document.createDocumentFragment();
+
+  CANDIDATES.forEach(c => {
+    const card = document.createElement("label");
+    card.className = "card";
+    card.setAttribute("aria-label", c.name);
+
+    const radioWrap = document.createElement("div");
+    radioWrap.className = "radio-wrap";
+
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "choice";
+    radio.value = c.id;
+    radio.className = "radio";
+    radio.setAttribute("aria-checked", "false");
+
+    radioWrap.appendChild(radio);
+
+    const figure = document.createElement("figure");
+    if (c.blank) {
+      figure.classList.add("blank");
+      figure.textContent = "Voto en blanco";
+    } else {
+      const img = document.createElement("img");
+      img.alt = `Disfraz de ${c.name} (ID: ${c.id}). Reemplaza con la foto en ${c.img}`;
+      img.loading = "lazy";
+      img.src = c.img; // Si no existe, el alt explica dónde ponerla
+      figure.appendChild(img);
+    }
+
+    const badge = document.createElement("div");
+    badge.className = "badge-name";
+    badge.textContent = c.name;
+
+    card.appendChild(radioWrap);
+    card.appendChild(figure);
+    card.appendChild(badge);
+
+    // Efecto visual de seleccionado
+    card.addEventListener("click", () => {
+      document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
+      card.classList.add("selected");
+      // actualizar aria-checked
+      document.querySelectorAll('input[name="choice"]').forEach(r => r.setAttribute("aria-checked", r.checked ? "true" : "false"));
     });
 
-    // Mensajes para feedback
-    window._voteMsgs = {
-      success: cfg.successMsg || "¡Voto registrado! Gracias por participar.",
-      duplicate: cfg.duplicateMsg || "Este correo ya registró un voto. Solo se permite uno por correo.",
-      invalidDomain: cfg.invalidDomainMsg || "Solo se aceptan correos @genteutil.net o @genteutilsa.com.",
-      invalidInput: cfg.invalidInputMsg || "Datos inválidos. Verifica el correo y la opción seleccionada.",
-      genericError: cfg.genericErrorMsg || "No se pudo registrar el voto. Intenta de nuevo más tarde.",
-      networkError: cfg.networkErrorMsg || "Error de red. Verifica tu conexión e inténtalo nuevamente.",
-      originError: cfg.originErrorMsg || "Origen no permitido. Revisa la configuración de CORS del backend."
-    };
-  })
-  .catch(() => { /* si falla, seguimos con textos por defecto */ })
-  .finally(setupVote);
+    frag.appendChild(card);
+  });
 
-// Lógica del formulario
-function setupVote() {
-  const form = document.getElementById("voteForm");
-  const submitBtn = document.getElementById("submitBtn");
-  const msg = document.getElementById("msg");
+  grid.appendChild(frag);
+}
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const allowedDomainRegex = /@(genteutil\.net|genteutilsa\.com)$/i;
+function showMessage(text, ok = true) {
+  msg.textContent = text;
+  msg.className = "msg " + (ok ? "ok" : "err");
+  msg.style.display = "block";
+}
 
-  function showMessage(text, ok = true) {
-    msg.textContent = text;
-    msg.className = "msg " + (ok ? "ok" : "err");
-    msg.style.display = "block";
+// Envío del formulario
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  msg.style.display = "none";
+
+  const email = (document.getElementById("email").value || "").trim().toLowerCase();
+  const choiceInput = document.querySelector('input[name="choice"]:checked');
+  const choice = choiceInput ? choiceInput.value : "";
+
+  if (!email || !emailRegex.test(email) || !choice) {
+    showMessage("Datos inválidos. Verifica el correo y selecciona un candidato.", false);
+    return;
+  }
+  if (!allowedDomainRegex.test(email)) {
+    showMessage("Solo se aceptan correos @genteutil.net o @genteutilsa.com.", false);
+    return;
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    msg.style.display = "none";
+  submitBtn.disabled = true;
+  const originalLabel = submitBtn.textContent;
+  submitBtn.textContent = "Enviando...";
 
-    const email = (document.getElementById("email").value || "").trim().toLowerCase();
-    const choice = document.getElementById("choice").value;
+  try {
+    // Sin headers "Content-Type" para evitar preflight CORS
+    const payload = JSON.stringify({ email, choice });
+    const res = await fetch(ENDPOINT_URL, { method: "POST", body: payload });
+    const text = await res.text();
+    let data = {};
+    try { data = JSON.parse(text); } catch (_) {}
 
-    if (!email || !emailRegex.test(email) || !choice) {
-      showMessage((window._voteMsgs && _voteMsgs.invalidInput) || "Datos inválidos. Verifica el correo y la opción seleccionada.", false);
-      return;
+    if (res.ok && data.status === "ok") {
+      showMessage("¡Voto registrado! Gracias por participar.", true);
+      form.reset();
+      // Quitar selección visual
+      document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
+    } else if (data.error === "DUPLICATE_EMAIL") {
+      showMessage("Este correo ya registró un voto. Solo se permite uno por correo.", false);
+    } else if (data.error === "INVALID_DOMAIN") {
+      showMessage("Solo se aceptan correos @genteutil.net o @genteutilsa.com.", false);
+    } else if (data.error === "INVALID_INPUT") {
+      showMessage("Datos inválidos. Revisa el correo y la opción.", false);
+    } else {
+      showMessage("No se pudo registrar el voto. Intenta de nuevo más tarde.", false);
     }
-    if (!allowedDomainRegex.test(email)) {
-      showMessage((window._voteMsgs && _voteMsgs.invalidDomain) || "Solo se aceptan correos @genteutil.net o @genteutilsa.com.", false);
-      return;
-    }
+  } catch (err) {
+    showMessage("Error de red. Intenta nuevamente.", false);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalLabel || "Enviar voto";
+  }
+});
 
-    submitBtn.disabled = true;
-    const originalLabel = submitBtn.innerText;
-    submitBtn.innerText = "Enviando...";
-
-    try {
-      // ⚠️ Sin headers "Content-Type" para evitar preflight CORS (OPTIONS)
-      const payload = JSON.stringify({ email, choice });
-      const res = await fetch(ENDPOINT_URL, {
-        method: "POST",
-        body: payload // se enviará como text/plain por defecto
-      });
-
-      const text = await res.text();
-      let data = {};
-      try { data = JSON.parse(text); } catch (_) {}
-
-      if (res.ok && data.status === "ok") {
-        showMessage((window._voteMsgs && _voteMsgs.success) || "¡Voto registrado! Gracias por participar.", true);
-        form.reset();
-      } else if (data.error === "DUPLICATE_EMAIL") {
-        showMessage((window._voteMsgs && _voteMsgs.duplicate) || "Este correo ya registró un voto. Solo se permite uno por correo.", false);
-      } else if (data.error === "INVALID_DOMAIN") {
-        showMessage((window._voteMsgs && _voteMsgs.invalidDomain) || "Solo se aceptan correos @genteutil.net o @genteutilsa.com.", false);
-      } else if (data.error === "INVALID_INPUT") {
-        showMessage((window._voteMsgs && _voteMsgs.invalidInput) || "Datos inválidos. Verifica el correo y la opción seleccionada.", false);
-      } else if (data.error === "ORIGIN_NOT_ALLOWED") {
-        showMessage((window._voteMsgs && _voteMsgs.originError) || "Origen no permitido. Revisa la configuración de CORS del backend.", false);
-      } else {
-        showMessage((window._voteMsgs && _voteMsgs.genericError) || "No se pudo registrar el voto. Intenta de nuevo más tarde.", false);
-      }
-    } catch (err) {
-      showMessage((window._voteMsgs && _voteMsgs.networkError) || "Error de red. Verifica tu conexión e inténtalo nuevamente.", false);
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.innerText = originalLabel || "Enviar voto";
-    }
-  });
-}
+renderGrid();
