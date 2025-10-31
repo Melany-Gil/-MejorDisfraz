@@ -128,24 +128,21 @@ form.addEventListener("submit", async (e) => {
     let data = {};
     try { data = JSON.parse(text); } catch (_) {}
 
-  if (res.ok && data.status === "ok") {
-    // ✅ Éxito: guardar el estado y mostrar mensaje
-    localStorage.setItem(domainKey, "true");
-    showMessage("✅ ¡Tu voto ha sido registrado con éxito! Gracias por participar.", true);
+    if (res.ok && data.status === "ok") {
+  // ✅ Éxito: guardar el estado y mostrar mensaje
+  const domainKey = window.location.hostname + "_votoHalloween2025";
+localStorage.setItem(domainKey, "true");
+  showMessage("✅ ¡Tu voto ha sido registrado con éxito! Gracias por participar.", true);
 
-    // Reinicia selección visual
-    form.reset();
-    document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
+  // Reinicia selección visual
+  form.reset();
+  document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
 
-    // Deshabilitar el botón de enviar inmediatamente
-    submitBtn.disabled = true;
-    submitBtn.style.opacity = "0.5";
-    submitBtn.style.cursor = "not-allowed";
-
-    // Evita clicks adicionales sin recargar
-    form.addEventListener("submit", (e) => e.preventDefault(), { once: true });
-  }
-
+  // Deshabilitar el botón de enviar
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = "0.5";
+  submitBtn.style.cursor = "not-allowed";
+}
  else if (data.error === "DUPLICATE_EMAIL") {
       showMessage("Este correo ya registró un voto. Solo se permite uno por correo.", false);
     } else if (data.error === "INVALID_DOMAIN") {
