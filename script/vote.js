@@ -1,20 +1,18 @@
 // ======== CONFIGURA TU ENDPOINT (Apps Script /exec) ========
-const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxQelLZJNtMcUy8Kp86fqQ6Hd28FU7ES7XsHfiB9Aj1CZqyPV4VYr5wFbo3NK9XwWTx/exec";
+const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxYHsL31ckTS2Cctqc1ec82pxkv5leeuzSlaHbxnas0i-QFrpTz3hssht52cYs_2wGp/exec";
 
 // Carga mensajes/labels desde customize.json (opcional)
 fetch("customize.json")
   .then(r => r.json())
   .then(cfg => {
     // Inserta textos si existen
-    const map = [
-      "voteHeading", "voteSubtext", "optionA", "optionB", "optionC", "submitLabel"
-    ];
+    const map = ["voteHeading", "voteSubtext", "optionA", "optionB", "optionC", "submitLabel"];
     map.forEach(key => {
       const el = document.querySelector(`[data-node-name="${key}"]`);
       if (el && cfg[key]) el.innerText = cfg[key];
     });
 
-    // Guarda mensajes para feedback
+    // Mensajes para feedback
     window._voteMsgs = {
       success: cfg.successMsg || "¡Voto registrado! Gracias por participar.",
       duplicate: cfg.duplicateMsg || "Este correo ya registró un voto. Solo se permite uno por correo.",
@@ -25,6 +23,7 @@ fetch("customize.json")
       originError: cfg.originErrorMsg || "Origen no permitido. Revisa la configuración de CORS del backend."
     };
   })
+  .catch(() => { /* si falla, seguimos con textos por defecto */ })
   .finally(setupVote);
 
 // Lógica del formulario
@@ -63,14 +62,17 @@ function setupVote() {
     submitBtn.innerText = "Enviando...";
 
     try {
+      // ⚠️ Sin headers "Content-Type" para evitar preflight CORS (OPTIONS)
+      const payload = JSON.stringify({ email, choice });
       const res = await fetch(ENDPOINT_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        mode: "cors",
-        body: JSON.stringify({ email, choice })
+        body: payload // se enviará como text/plain por defecto
       });
 
-      const data = await res.json().catch(() => ({}));
+      const text = await res.text();
+      let data = {};
+      try { data = JSON.parse(text); } catch (_) {}
+
       if (res.ok && data.status === "ok") {
         showMessage((window._voteMsgs && _voteMsgs.success) || "¡Voto registrado! Gracias por participar.", true);
         form.reset();
