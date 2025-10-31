@@ -1,14 +1,42 @@
-html { box-sizing: border-box;
-  background-color: #0e215d;
-  color:#fff;}
-*, *:before, *:after { box-sizing: inherit; }
+/* ==========================================================
+   CORPORATE HALLOWEEN ANIMATED INTRO - GENTE ÚTIL STYLE
+   ========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+:root {
+  --azul-corporativo: #0e215d;
+  --naranja: #ff7b00;
+  --naranja-claro: #ffa64d;
+  --blanco: #ffffff;
+  --gris: #dcdcdc;
+  --sombra: rgba(0, 0, 0, 0.25);
+}
+
+/* ==========================================================
+   BASE
+   ========================================================== */
+html {
+  box-sizing: border-box;
+  background: radial-gradient(circle at top right, #162b6f 0%, var(--azul-corporativo) 60%);
+  color: var(--blanco);
+  scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
 
 body {
   margin: 0;
-  font-family: "Work Sans", sans-serif;
+  font-family: "Montserrat", sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* 👇 Corrección: 100vw (ancho), NO 100vh */
+/* ==========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================== */
 .container {
   height: 100vh;
   width: 100vw;
@@ -19,19 +47,6 @@ body {
   overflow: hidden;
 }
 
-.container div.six {
-  top: 10vh;
-  z-index: 1;
-}
-
-.container div.seven,
-.container div.eight {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-}
-
 .container > div {
   position: absolute;
   left: 0;
@@ -39,7 +54,15 @@ body {
   top: 20vh;
 }
 
-.one { font-size: 4.5rem; }
+/* ==========================================================
+   PRIMERAS SECCIONES DE TEXTO
+   ========================================================== */
+.one {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--naranja);
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
 
 .one > img {
   vertical-align: middle;
@@ -48,66 +71,132 @@ body {
   height: auto;
 }
 
-.two { font-size: 1.2rem; font-weight: lighter; }
-.three { font-size: 3rem; }
+.two {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--gris);
+}
 
+.three {
+  font-size: 2.8rem;
+  color: var(--blanco);
+  font-weight: 600;
+}
+
+/* ==========================================================
+   CAJA DE MENSAJE SIMULADA
+   ========================================================== */
 .four .text-box {
   width: 600px;
   margin: 0 auto;
-  border: 3px solid #aaa;
-  border-radius: 5px;
-  padding: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 14px 16px;
   position: relative;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  transition: transform 0.5s ease;
 }
 
-.text-box p { margin: 0; text-align: left; }
-.text-box span { visibility: hidden; }
+.text-box p {
+  margin: 0;
+  text-align: left;
+  color: var(--gris);
+}
 
 .text-box .fake-btn {
   position: absolute;
-  right: 5px;
-  bottom: 5px;
-  color: #fff;
-  background-color: rgb(21, 161, 237);
-  padding: 5px 8px;
-  border-radius: 3px;
+  right: 8px;
+  bottom: 8px;
+  color: var(--blanco);
+  background: linear-gradient(135deg, var(--naranja), var(--naranja-claro));
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 2px 6px var(--sombra);
+  transition: all 0.3s ease;
 }
 
+.text-box .fake-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, var(--naranja-claro), #ffd699);
+}
+
+/* ==========================================================
+   FRASES INTERMEDIAS / IDEAS
+   ========================================================== */
 .five p {
   font-size: 2rem;
+  font-weight: 400;
   position: absolute;
   left: 0;
   right: 0;
+  color: var(--blanco);
 }
 
 .idea-3 strong {
-  padding: 3px 5px;
-  border-radius: 3px;
+  padding: 4px 10px;
+  border-radius: 5px;
   display: inline-block;
+  background: var(--naranja);
+  color: var(--blanco);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-.five .idea-5 { font-size: 4rem; }
+.idea-5 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--naranja);
+}
 
-.idea-5 span,
-.idea-6 span,
-.wish-hbd span { display: inline-block; }
+/* ==========================================================
+   IMAGEN Y MENSAJE FINAL
+   ========================================================== */
+.six {
+  position: relative;
+}
 
-.idea-6 span { font-size: 15rem; }
+.six img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+}
 
-.six { position: relative; }
-.six img { display: inline-block; max-width: 100%; height: auto; }
+.wish-hbd {
+  font-size: 2.6em;
+  margin: 0;
+  text-transform: uppercase;
+  color: var(--naranja);
+  letter-spacing: 2px;
+}
 
-.six .hat {
+.wish h5 {
+  font-weight: 400;
+  font-size: 1.2rem;
+  margin: 10px 0 0;
+  color: var(--gris);
+}
+
+/* ==========================================================
+   DECORACIONES Y EFECTOS
+   ========================================================== */
+.baloons img {
+  display: inline-block;
   position: absolute;
-  width: 80px;
-  top: -35px;
-  left: 41.5%;
 }
 
-.baloons img { display: inline-block; position: absolute; }
-.baloons img:nth-child(even) { left: -10%; }
-.baloons img:nth-child(odd)  { right: -10%; }
-.baloons img:nth-child(3n + 0) { left: 30%; }
+.baloons img:nth-child(even) {
+  left: -10%;
+}
+
+.baloons img:nth-child(odd) {
+  right: -10%;
+}
+
+.baloons img:nth-child(3n + 0) {
+  left: 30%;
+}
 
 .eight svg {
   width: 25px;
@@ -118,50 +207,175 @@ body {
   z-index: -1;
 }
 
-.eight svg:nth-child(1) { top: 7vh;  left: 5vw;  fill: #bd6ecf; }
-.eight svg:nth-child(2) { top: 23vh; left: 35vw; fill: #7dd175; }
-.eight svg:nth-child(3) { top: 33vh; left: 23vw; fill: #349d8b; }
-.eight svg:nth-child(4) { top: 43vh; left: 57vw; fill: #347a9d; }
-.eight svg:nth-child(5) { top: 68vh; left: 7vw;  fill: #c66053; }
-.eight svg:nth-child(6) { top: 42vh; left: 77vw; fill: #bfaa40; }
-.eight svg:nth-child(7) { top: 68vh; left: 83vw; fill: #e3bae8; }
-.eight svg:nth-child(8) { top: 86vh; left: 37vw; fill: #8762cb; }
-.eight svg:nth-child(9) { top: 94vh; left: 87vw; fill: #9a90da; }
-
-.wish-hbd { font-size: 3em; margin: 0; text-transform: uppercase; }
-.wish h5   { font-weight: lighter; font-size: 2rem; margin: 10px 0 0; }
-
-.nine p { font-size: 2rem; font-weight: lighter; }
-#replay  { z-index: 3; cursor: pointer; }
-
-/* Enlace a la votación (si lo usas desde index.html) */
-.go-vote-btn {
-  margin-top: 16px;
-  display: inline-block;
-  border: 1px solid #1112;
-  background: #1111;
-  padding: 10px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 700;
-  text-decoration: none;
-  color: #111;
+.eight svg:nth-child(1) {
+  top: 7vh;
+  left: 5vw;
+  fill: #bd6ecf;
 }
 
-/* Media Queries */
-@media screen and (max-height: 1000px) { .six .hat { left: 40%; } }
-@media screen and (max-height: 800px)  { .six .hat { left: 37%; } }
-@media screen and (max-height: 700px)  { .six .hat { left: 32%; } }
-@media screen and (max-height: 850px) and (max-width: 450px) { .six .hat { left: 32%; } }
+.eight svg:nth-child(2) {
+  top: 23vh;
+  left: 35vw;
+  fill: #7dd175;
+}
+
+.eight svg:nth-child(3) {
+  top: 33vh;
+  left: 23vw;
+  fill: #349d8b;
+}
+
+.eight svg:nth-child(4) {
+  top: 43vh;
+  left: 57vw;
+  fill: #347a9d;
+}
+
+.eight svg:nth-child(5) {
+  top: 68vh;
+  left: 7vw;
+  fill: #c66053;
+}
+
+.eight svg:nth-child(6) {
+  top: 42vh;
+  left: 77vw;
+  fill: #bfaa40;
+}
+
+.eight svg:nth-child(7) {
+  top: 68vh;
+  left: 83vw;
+  fill: #e3bae8;
+}
+
+.eight svg:nth-child(8) {
+  top: 86vh;
+  left: 37vw;
+  fill: #8762cb;
+}
+
+.eight svg:nth-child(9) {
+  top: 94vh;
+  left: 87vw;
+  fill: #9a90da;
+}
+
+/* ==========================================================
+   SECCIÓN FINAL CON BOTÓN - EXTREMADAMENTE ABAJO
+   ========================================================== */
+.nine {
+  position: relative;
+  min-height: 100vh; /* 👈 hace que ocupe toda la pantalla */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* 👈 coloca el contenido al final del contenedor */
+  gap: 24px;
+  padding-bottom: 300px; /* 👈 gran espacio debajo (aún más visible) */
+}
+
+.nine p {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--gris);
+}
+
+#replay {
+  z-index: 3;
+  cursor: pointer;
+  color: var(--naranja);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+#replay:hover {
+  color: var(--naranja-claro);
+}
+
+/* ==========================================================
+   BOTÓN DE VOTACIÓN
+   ========================================================== */
+.go-vote-btn {
+  margin-top: 100px; /* 👈 más espacio respecto al texto */
+  margin-bottom: 280px; /* 👈 gran espacio antes del final */
+  display: inline-block;
+  background: linear-gradient(135deg, var(--naranja), var(--naranja-claro));
+  color: var(--blanco);
+  padding: 16px 48px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-decoration: none;
+  box-shadow: 0 5px 14px var(--sombra);
+  transition: all 0.3s ease;
+}
+
+.go-vote-btn:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, var(--naranja-claro), #ffd18a);
+  box-shadow: 0 7px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* ==========================================================
+   MEDIA QUERIES
+   ========================================================== */
+@media screen and (max-width: 768px) {
+  .nine {
+    padding-bottom: 250px;
+  }
+
+  .go-vote-btn {
+    margin-top: 80px;
+    margin-bottom: 220px;
+    padding: 14px 36px;
+    font-size: 1rem;
+  }
+}
 
 @media screen and (max-width: 500px) {
-  .container { width: 90vw; } /* coherente con 100vw */
-  .four .text-box { width: 90%; }
-  .text-box .fake-btn { right: 5px; bottom: -38px; }
-  .idea-5 span { display: block; }
-  .idea-6 span { font-size: 10rem; }
-  .six .hat { width: 50px; top: -20px; }
-  .wish-hbd { font-size: 2.2em; }
-  .wish h5 { font-size: 1.4rem; }
-  .nine p { font-size: 1.5rem; font-weight: lighter; }
+  .nine {
+    min-height: 100vh;
+    padding-bottom: 260px; /* 👈 incluso más espacio en móviles */
+  }
+
+  .go-vote-btn {
+    margin-top: 60px;
+    margin-bottom: 240px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+  }
+}
+
+/* ==========================================================
+   MEDIA QUERIES
+   ========================================================== */
+@media screen and (max-width: 1024px) {
+  .one { font-size: 3.2rem; }
+  .three { font-size: 2.2rem; }
+  .five p { font-size: 1.7rem; }
+  .wish-hbd { font-size: 2.2rem; }
+}
+
+@media screen and (max-width: 768px) {
+  .container { width: 90vw; }
+  .one { font-size: 2.6rem; }
+  .three { font-size: 1.8rem; }
+  .wish h5 { font-size: 1rem; }
+  .five p { font-size: 1.4rem; }
+  .go-vote-btn { padding: 12px 24px; font-size: 1rem; }
+}
+
+@media screen and (max-width: 500px) {
+  .one { font-size: 2.2rem; }
+  .three { font-size: 1.4rem; }
+  .wish-hbd { font-size: 1.7rem; }
+  .wish h5 { font-size: 0.9rem; }
+  .nine p { font-size: 1.1rem; }
+  .go-vote-btn {
+    margin-top: 30px;
+    margin-bottom: 60px;
+    padding: 10px 22px;
+    font-size: 0.9rem;
+  }
 }

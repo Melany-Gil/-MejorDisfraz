@@ -45,7 +45,11 @@ function renderGrid() {
 
     const badge = document.createElement("div");
     badge.className = "badge-name";
-    badge.textContent = c.name;
+    badge.innerHTML = `
+      ${c.name}<br>
+      <strong>${c.costume ? `<span class="costume">| ${c.costume}</span>` : ""}</strong>
+    `;
+    card.appendChild(badge);
 
     card.appendChild(radioWrap);
     card.appendChild(figure);

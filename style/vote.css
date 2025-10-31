@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 :root{
   --brand:#005baa;     /* azul corporativo aproximado */
   --bg:#0a2b7a;        /* fondo azul del flyer */
@@ -10,7 +12,7 @@
 }
 
 *{ box-sizing: border-box; }
-html, body { margin:0; padding:0; font-family:"Work Sans", system-ui, sans-serif; background:linear-gradient(180deg, #0a2b7a, #0c3ca4 40%, #0a2b7a); color:var(--white); }
+html, body { margin:0; padding:0; font-family:"Montserrat", system-ui, sans-serif; background:linear-gradient(180deg, #0a2b7a, #0c3ca4 40%, #0a2b7a); color:var(--white); }
 
 .vote { max-width: 1200px; margin: 32px auto; padding: 16px; }
 .vote-header h1 { margin:0 0 4px; font-weight:700; letter-spacing:.2px; }
@@ -60,8 +62,16 @@ html, body { margin:0; padding:0; font-family:"Work Sans", system-ui, sans-serif
 .badge-name{
   position:absolute; right:8px; bottom:8px; top:8px; width: 36px;
   display:flex; align-items:center; justify-content:center;
-  background: rgba(255,255,255,.9); color:#0b2f80; font-weight:700; border-radius:12px;
+  color:#ffffff; font-weight: normal; border-radius:12px;
   writing-mode: vertical-rl; text-orientation: mixed; letter-spacing:.3px; font-size:.9rem;
+}
+.badge-name strong { font-size: 1rem; }
+.badge-name .costume {
+  font-size: .8rem;
+  color: #ffffff;
+  font-weight: 600;
+  margin-top: 4px;
+  text-orientation: mixed;
 }
 
 /* Radio "check" circular en la esquina (estilo flyer) */
