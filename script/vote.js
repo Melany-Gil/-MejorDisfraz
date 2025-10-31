@@ -1,6 +1,23 @@
 // ======== CONFIGURA TU ENDPOINT (Apps Script /exec) ========
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxYHsL31ckTS2Cctqc1ec82pxkv5leeuzSlaHbxnas0i-QFrpTz3hssht52cYs_2wGp/exec";
 
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("votoHalloween2025") === "true") {
+    const msg = document.getElementById("msg");
+    const submitBtn = document.getElementById("submitBtn");
+
+    msg.textContent = "🎃 Ya registraste tu voto. ¡Gracias por participar!";
+    msg.className = "msg ok";
+    msg.style.display = "block";
+
+    // Bloquear botón pero mantener visible el formulario
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = "0.5";
+    submitBtn.style.cursor = "not-allowed";
+  }
+});
+
+
 // Validación de correo corporativo
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedDomainRegex = /@(genteutil\.net|genteutilsa\.com)$/i;
@@ -19,6 +36,7 @@ function renderGrid() {
     card.className = "card";
     card.setAttribute("aria-label", c.name);
 
+    // Radio
     const radioWrap = document.createElement("div");
     radioWrap.className = "radio-wrap";
 
@@ -31,6 +49,7 @@ function renderGrid() {
 
     radioWrap.appendChild(radio);
 
+    // Figura / imagen o voto en blanco
     const figure = document.createElement("figure");
     if (c.blank) {
       figure.classList.add("blank");
@@ -39,28 +58,30 @@ function renderGrid() {
       const img = document.createElement("img");
       img.alt = `Disfraz de ${c.name} (ID: ${c.id}). Reemplaza con la foto en ${c.img}`;
       img.loading = "lazy";
-      img.src = c.img; // Si no existe, el alt explica dónde ponerla
+      img.src = c.img; // si no existe, el alt explica dónde ponerla
       figure.appendChild(img);
     }
 
+    // Nombre + disfraz
     const badge = document.createElement("div");
     badge.className = "badge-name";
     badge.innerHTML = `
       ${c.name}<br>
-      <strong>${c.costume ? `<span class="costume">| ${c.costume}</span>` : ""}</strong>
+      ${c.costume ? `<strong class="costume">${c.costume}</strong>` : ""}
     `;
-    card.appendChild(badge);
 
+    // Orden visual
     card.appendChild(radioWrap);
     card.appendChild(figure);
     card.appendChild(badge);
 
-    // Efecto visual de seleccionado
+    // Efecto visual seleccionado
     card.addEventListener("click", () => {
       document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
       card.classList.add("selected");
-      // actualizar aria-checked
-      document.querySelectorAll('input[name="choice"]').forEach(r => r.setAttribute("aria-checked", r.checked ? "true" : "false"));
+      document.querySelectorAll('input[name="choice"]').forEach(r =>
+        r.setAttribute("aria-checked", r.checked ? "true" : "false")
+      );
     });
 
     frag.appendChild(card);
@@ -106,11 +127,20 @@ form.addEventListener("submit", async (e) => {
     try { data = JSON.parse(text); } catch (_) {}
 
     if (res.ok && data.status === "ok") {
-      showMessage("¡Voto registrado! Gracias por participar.", true);
-      form.reset();
-      // Quitar selección visual
-      document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
-    } else if (data.error === "DUPLICATE_EMAIL") {
+  // ✅ Éxito: guardar el estado y mostrar mensaje
+  localStorage.setItem("votoHalloween2025", "true");
+  showMessage("✅ ¡Tu voto ha sido registrado con éxito! Gracias por participar.", true);
+
+  // Reinicia selección visual
+  form.reset();
+  document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
+
+  // Deshabilitar el botón de enviar
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = "0.5";
+  submitBtn.style.cursor = "not-allowed";
+}
+ else if (data.error === "DUPLICATE_EMAIL") {
       showMessage("Este correo ya registró un voto. Solo se permite uno por correo.", false);
     } else if (data.error === "INVALID_DOMAIN") {
       showMessage("Solo se aceptan correos @genteutil.net o @genteutilsa.com.", false);
