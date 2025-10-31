@@ -2,7 +2,9 @@
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxYHsL31ckTS2Cctqc1ec82pxkv5leeuzSlaHbxnas0i-QFrpTz3hssht52cYs_2wGp/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("votoHalloween2025") === "true") {
+  const domainKey = window.location.hostname + "_votoHalloween2025";
+  if (localStorage.getItem(domainKey) === "true") {
+
     const msg = document.getElementById("msg");
     const submitBtn = document.getElementById("submitBtn");
 
@@ -128,7 +130,8 @@ form.addEventListener("submit", async (e) => {
 
     if (res.ok && data.status === "ok") {
   // ✅ Éxito: guardar el estado y mostrar mensaje
-  localStorage.setItem("votoHalloween2025", "true");
+  const domainKey = window.location.hostname + "_votoHalloween2025";
+localStorage.setItem(domainKey, "true");
   showMessage("✅ ¡Tu voto ha sido registrado con éxito! Gracias por participar.", true);
 
   // Reinicia selección visual
