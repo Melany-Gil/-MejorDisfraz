@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Votación</title>
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400" rel="stylesheet">
+  <link rel="stylesheet" href="style/vote.css">
+</head>
+<body>
+  <main class="vote">
+    <div class="vote-card">
+      <h2 data-node-name="voteHeading">Encuesta de votación</h2>
+      <p class="vote-muted" data-node-name="voteSubtext">
+        Solo correos <strong>@genteutil.net</strong> o <strong>@genteutilsa.com</strong>. Un correo = un voto. Tus respuestas no son públicas.
+      </p>
+
+      <form id="voteForm" novalidate>
+        <label for="email">Correo electrónico</label>
+        <input id="email" name="email" type="email" placeholder="tucorreo@genteutil.net" autocomplete="email" required>
+
+        <label for="choice">Tu elección</label>
+        <select id="choice" name="choice" required>
+          <option value="" disabled selected>Selecciona una opción</option>
+          <option data-node-name="optionA" value="Opción A">Opción A</option>
+          <option data-node-name="optionB" value="Opción B">Opción B</option>
+          <option data-node-name="optionC" value="Opción C">Opción C</option>
+        </select>
+
+        <button id="submitBtn" type="submit" class="submit" data-node-name="submitLabel">Enviar voto</button>
+      </form>
+
+      <div id="msg" class="msg" role="status" aria-live="polite"></div>
+
+      <div class="vote-actions">
+        <a href="index.html" class="linkish" id="backShow">Volver al show</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="script/vote.js"></script>
+</body>
+</html>
