@@ -1,4 +1,3 @@
-// ======== CONFIGURA TU ENDPOINT (Apps Script /exec) ========
 const ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxYHsL31ckTS2Cctqc1ec82pxkv5leeuzSlaHbxnas0i-QFrpTz3hssht52cYs_2wGp/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -12,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.className = "msg ok";
     msg.style.display = "block";
 
-    // Bloquear botón pero mantener visible el formulario
     submitBtn.disabled = true;
     submitBtn.style.opacity = "0.5";
     submitBtn.style.cursor = "not-allowed";
@@ -20,7 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Validación de correo corporativo
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedDomainRegex = /@(genteutil\.net|genteutilsa\.com)$/i;
 
@@ -29,7 +26,6 @@ const form = document.getElementById("voteForm");
 const submitBtn = document.getElementById("submitBtn");
 const msg = document.getElementById("msg");
 
-// Construir tarjetas
 function renderGrid() {
   const frag = document.createDocumentFragment();
 
@@ -38,7 +34,6 @@ function renderGrid() {
     card.className = "card";
     card.setAttribute("aria-label", c.name);
 
-    // Radio
     const radioWrap = document.createElement("div");
     radioWrap.className = "radio-wrap";
 
@@ -51,7 +46,6 @@ function renderGrid() {
 
     radioWrap.appendChild(radio);
 
-    // Figura / imagen o voto en blanco
     const figure = document.createElement("figure");
     if (c.blank) {
       figure.classList.add("blank");
@@ -60,11 +54,10 @@ function renderGrid() {
       const img = document.createElement("img");
       img.alt = `Disfraz de ${c.name} (ID: ${c.id}). Reemplaza con la foto en ${c.img}`;
       img.loading = "lazy";
-      img.src = c.img; // si no existe, el alt explica dónde ponerla
+      img.src = c.img;
       figure.appendChild(img);
     }
 
-    // Nombre + disfraz
     const badge = document.createElement("div");
     badge.className = "badge-name";
     badge.innerHTML = `
@@ -72,12 +65,10 @@ function renderGrid() {
       ${c.costume ? `<strong class="costume">${c.costume}</strong>` : ""}
     `;
 
-    // Orden visual
     card.appendChild(radioWrap);
     card.appendChild(figure);
     card.appendChild(badge);
 
-    // Efecto visual seleccionado
     card.addEventListener("click", () => {
       document.querySelectorAll(".card").forEach(el => el.classList.remove("selected"));
       card.classList.add("selected");
@@ -98,7 +89,6 @@ function showMessage(text, ok = true) {
   msg.style.display = "block";
 }
 
-// Envío del formulario
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   msg.style.display = "none";
@@ -121,7 +111,6 @@ form.addEventListener("submit", async (e) => {
   submitBtn.textContent = "Enviando...";
 
   try {
-    // Sin headers "Content-Type" para evitar preflight CORS
     const payload = JSON.stringify({ email, choice });
     const res = await fetch(ENDPOINT_URL, { method: "POST", body: payload });
     const text = await res.text();
@@ -140,12 +129,11 @@ form.addEventListener("submit", async (e) => {
     submitBtn.style.opacity = "0.5";
     submitBtn.style.cursor = "not-allowed";
 
-    // 🔁 Recargar la página después de que el mensaje sea visible y el fetch haya terminado
     setTimeout(() => {
       window.location.reload();
     }, 2000);
     
-    return; // 👈 Esto evita que entre al bloque `finally` y re-habilite el botón
+    return;
   }
 
 

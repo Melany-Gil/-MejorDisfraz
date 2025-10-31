@@ -14,6 +14,6 @@ const CANDIDATES = [
   { id: "cand13", name: "Sebastián",  costume: "| Tronco e' Congo",      img: "img/candidates/sebas.png" },
   { id: "cand14", name: "Jose",  costume: "| Egipcio",      img: "img/candidates/jose.png" },
 
-  // Voto en blanco (sin imagen real)
+  // Voto en blanco
   { id: "BLANCO", name: " ", img: null, blank: true }
 ];

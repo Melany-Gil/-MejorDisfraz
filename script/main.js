@@ -1,4 +1,3 @@
-// Carga textos y dispara animación
 const fetchData = () => {
   fetch("customize.json")
     .then(data => data.json())
@@ -20,7 +19,6 @@ const fetchData = () => {
       });
     })
     .catch(() => {
-      // Si customize.json falla, igual intentamos arrancar animación
       animationTimeline();
     });
 };
@@ -30,11 +28,9 @@ const animationTimeline = () => {
   const hbd = document.getElementsByClassName("wish-hbd")[0];
 
   if (!textBoxChars || !hbd) {
-    // Si no están en el DOM, no forzamos nada
     return;
   }
 
-  // 👇 Corrección: cerrar correctamente </span>
   textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
     .split("")
     .join("</span><span>")}</span>`;
@@ -46,7 +42,6 @@ const animationTimeline = () => {
   const ideaTextTrans = { opacity: 0, y: -20, rotationX: 5, skewX: "15deg" };
   const ideaTextTransLeave = { opacity: 0, y: 20, rotationY: 5, skewX: "-15deg" };
 
-  // Asegúrate de tener TweenMax/TimelineMax cargado desde el CDN
   const tl = new TimelineMax();
 
   tl
@@ -91,5 +86,4 @@ const animationTimeline = () => {
   if (replayBtn) replayBtn.addEventListener("click", () => tl.restart());
 };
 
-// Arranca
 fetchData();

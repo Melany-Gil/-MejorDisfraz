@@ -266,13 +266,13 @@ body {
    ========================================================== */
 .nine {
   position: relative;
-  min-height: 100vh; /* 👈 hace que ocupe toda la pantalla */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end; /* 👈 coloca el contenido al final del contenedor */
+  justify-content: flex-end;
   gap: 24px;
-  padding-bottom: 300px; /* 👈 gran espacio debajo (aún más visible) */
+  padding-bottom: 300px;
 }
 
 .nine p {
@@ -297,8 +297,8 @@ body {
    BOTÓN DE VOTACIÓN
    ========================================================== */
 .go-vote-btn {
-  margin-top: 100px; /* 👈 más espacio respecto al texto */
-  margin-bottom: 280px; /* 👈 gran espacio antes del final */
+  margin-top: 100px;
+  margin-bottom: 280px;
   display: inline-block;
   background: linear-gradient(135deg, var(--naranja), var(--naranja-claro));
   color: var(--blanco);
@@ -336,7 +336,7 @@ body {
 @media screen and (max-width: 500px) {
   .nine {
     min-height: 100vh;
-    padding-bottom: 260px; /* 👈 incluso más espacio en móviles */
+    padding-bottom: 260px;
   }
 
   .go-vote-btn {
